@@ -42,7 +42,4 @@ Access configuration via: **Tools → Add-ons → Add Recent Tags → Config**
   - How many of your most recent notes to search through for tags
   - Higher numbers provide more tag variety but may be slower
 
-Click **Restore Defaults** to reset all settings to their original values.
----
-
-**Enjoy faster tagging!** 🚀
+- Click **Restore Defaults** to reset all settings to their original values.
