@@ -1,0 +1,10 @@
+{
+    "package": "add_recent_tags",
+    "name": "Add Recent Tags",
+    "author": "FlaccidSnake",
+    "version": "1.0.0",
+    "homepage": "",
+    "conflicts": [],
+    "min_point_version": 49,
+    "max_point_version": 0
+}
