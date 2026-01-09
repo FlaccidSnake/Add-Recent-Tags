@@ -1,2 +1,4 @@
 **/__pycache__/
 *.ankiaddon
+meta.json
+config.json
