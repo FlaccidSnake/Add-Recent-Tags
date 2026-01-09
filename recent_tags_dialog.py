@@ -8,6 +8,8 @@ from aqt.qt import (
     QLineEdit,
     Qt,
 )
+from aqt.tagedit import TagEdit
+from aqt import mw
 
 
 class TagButton(QHBoxLayout):
@@ -22,19 +24,21 @@ class TagButton(QHBoxLayout):
         
         # Modify button (toggles edit mode)
         self.modify_btn = QPushButton("Modify")
-        self.modify_btn.setFixedWidth(80)
+        self.modify_btn.setFixedWidth(90)
         self.modify_btn.clicked.connect(self.toggle_edit_mode)
         self.addWidget(self.modify_btn)
         
-        # Tag button (can be replaced with line edit)
+        # Tag button (can be replaced with tag edit)
         self.tag_btn = QPushButton(tag_text)
         self.tag_btn.setCheckable(True)
         self.tag_btn.clicked.connect(self.on_tag_clicked)
         self.tag_btn.setStyleSheet("")
         self.addWidget(self.tag_btn, 1)
         
-        # Line edit (hidden by default)
-        self.tag_edit = QLineEdit(tag_text)
+        # Tag edit with autocomplete (hidden by default)
+        self.tag_edit = TagEdit(parent_dialog)
+        self.tag_edit.setCol(mw.col)
+        self.tag_edit.setText(tag_text)
         self.tag_edit.hide()
         self.tag_edit.returnPressed.connect(self.finish_editing)
         self.addWidget(self.tag_edit, 1)
@@ -59,6 +63,10 @@ class TagButton(QHBoxLayout):
     def finish_editing(self):
         """Finish editing and update the tag."""
         self.is_editing = False
+        
+        # Hide the completer before getting text
+        self.tag_edit.hideCompleter()
+        
         new_text = self.tag_edit.text().strip()
         if new_text:
             self.tag_btn.setText(new_text)
@@ -132,14 +140,41 @@ class RecentTagsDialog(QDialog):
         if event.type() == event.Type.MouseButtonPress:
             for tag_btn in self.tag_buttons:
                 if tag_btn.is_editing:
+                    # Get global position (Qt6 compatibility)
+                    try:
+                        global_pos = event.globalPosition().toPoint()
+                    except AttributeError:
+                        # Qt5 fallback
+                        global_pos = event.globalPos()
+                    
                     # Check if click is outside the line edit
                     if not tag_btn.tag_edit.geometry().contains(
-                        tag_btn.tag_edit.mapFromGlobal(event.globalPos())
+                        tag_btn.tag_edit.mapFromGlobal(global_pos)
                     ):
                         tag_btn.finish_editing()
         return super().eventFilter(obj, event)
     
+    def accept(self):
+        """Handle dialog acceptance - hide all completers first."""
+        for tag_btn in self.tag_buttons:
+            if hasattr(tag_btn.tag_edit, 'hideCompleter'):
+                tag_btn.tag_edit.hideCompleter()
+        super().accept()
+    
+    def reject(self):
+        """Handle dialog rejection - hide all completers first."""
+        for tag_btn in self.tag_buttons:
+            if hasattr(tag_btn.tag_edit, 'hideCompleter'):
+                tag_btn.tag_edit.hideCompleter()
+        super().reject()
+    
     def get_selected_tags(self):
+        """Return list of selected tag texts."""
+        return [
+            tag_btn.get_tag_text() 
+            for tag_btn in self.tag_buttons 
+            if tag_btn.is_tag_selected()
+        ]
         """Return list of selected tag texts."""
         return [
             tag_btn.get_tag_text() 
