@@ -1,6 +1,7 @@
 # Add Recent Tags
+## Use Case
 
-An Anki add-on that lets you quickly add tags from your most recently created notes to any card, with the ability to modify tags on-the-fly before adding them.
+I add notes on a per-chapter basis, in chunks based on each topic within the chapter, so I wanted a tool to quickly add that chapter tag to each chunk as I added it. Scrolling down in the sidebar, right-clicking, and clicking 'Add tag to selected notes' is fine, but I can go even faster with this tool. Save your precious study time, don't be procrastinating via post-processing.
 
 ## Features
 
@@ -36,7 +37,7 @@ Access configuration via: **Tools → Add-ons → Add Recent Tags → Config**
 ### Settings
 
 - **Number of recent tags to show**: (1-20, default: 5)
-  - How many tag buttons appear in the dialog
+  - How many tag buttons appear in the dialogue
   
 - **Number of recent notes to search**: (10-500, default: 50)
   - How many of your most recent notes to search through for tags
